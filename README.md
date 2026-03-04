@@ -34,8 +34,17 @@ az bicep version
 		main.json
 		parameters.json
 	/bicep
+        /modules
+            network.bicep
+            vm.bicep
 		main.bicep
 		parameters.bicepparam
+```
+
+## Create .env file based on example below
+```text
+# VM Admin password
+ADMIN_PASSWORD=YOUR-PASSWORD-HERE
 ```
 
 ## Lab 1: Interpret an ARM template or Bicep file

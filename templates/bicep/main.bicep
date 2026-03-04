@@ -36,6 +36,9 @@ param vnetName string = 'az104-vnet01'
 @description('Subnet name')
 param subnetName string = 'default'
 
+@description('Allowed source IP or CIDR for inbound RDP (port 3389)')
+param rdpAllowedSourceIp string
+
 module networkModule './modules/network.bicep' = {
   params: {
     location: location
@@ -43,6 +46,7 @@ module networkModule './modules/network.bicep' = {
     vnetAddressPrefix: vnetAddressPrefix
     subnetName: subnetName
     subnetAddressPrefix: subnetAddressPrefix
+    rdpAllowedSourceIp: rdpAllowedSourceIp
   }
 }
 

@@ -15,31 +15,27 @@ By the end of this module, you should be able to:
 ## Prerequisites
 
 - Azure subscription with permissions to deploy resources
-- Azure CLI installed and signed in (`az login`)
+- Azure CLI installed and signed in (`az login`) — [install guide](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 - Bicep CLI available (`az bicep install`)
-- A resource group for the labs
+- Two resource group for the labs, one for ARM and one for Bicep
 
 Optional checks:
 
-```bash
+```powershell
 az account show
 az bicep version
 ```
 
-## Suggested repository layout
-
-You will add files over time. Use this structure as a guide:
+## Review the example files in the repository
 
 ```text
 /templates
 	/arm
-		baseline-template.json
+		main.json
 		parameters.json
 	/bicep
 		main.bicep
-		main.bicepparam
-/commands
-	deployment-commands.md
+		parameters.bicepparam
 ```
 
 ## Lab 1: Interpret an ARM template or Bicep file
@@ -74,22 +70,42 @@ Make a controlled change to an existing ARM template.
 	 - Update SKU/tier
 	 - Add a resource tag
 2. If parameters are externalized, update `parameters.json` accordingly.
-3. Validate the template:
+3. Define variables to use later
 
-```bash
-az deployment group validate \
-	--resource-group <resource-group-name> \
-	--template-file <path-to-template.json> \
-	--parameters <path-to-parameters.json>
+```powershell
+$resourceGroupName = 'rg-az104-demo-arm'
+$templateFile = './templates/arm/main.json'
+$parameterFile = './templates/arm/parameters.json'
+$deploymentName = "az104-bicep"
 ```
 
-4. Run a what-if preview to inspect impact:
+4. Validate the template:
 
-```bash
-az deployment group what-if \
-	--resource-group <resource-group-name> \
-	--template-file <path-to-template.json> \
-	--parameters <path-to-parameters.json>
+```powershell
+az deployment group validate `
+    --name "$deploymentName-validate" `
+    --resource-group $resourceGroupName `
+    --template-file $templateFile `
+    --parameters $parameterFile
+```
+
+5. Run a what-if preview to inspect impact:
+
+```powershell
+az deployment group what-if `
+    --name "$deploymentName-what-if" `
+    --resource-group $resourceGroupName `
+    --template-file $templateFile `
+    --parameters $parameterFile
+```
+
+6. Run a deployment to deploy the resources:
+```powershell
+az deployment group create `
+    --name "$deploymentName" `
+    --resource-group $resourceGroupName `
+    --template-file $templateFile `
+    --parameters $parameterFile
 ```
 
 ## Lab 3: Modify an existing Bicep file
@@ -102,28 +118,38 @@ Apply similar infrastructure changes using Bicep syntax.
 	 - Add or edit a `param`
 	 - Update a resource property (for example SKU)
 	 - Add tags or outputs
-2. Build/compile Bicep to ARM JSON (sanity check):
+2. Define variables to use later
 
-```bash
-az bicep build --file <path-to-main.bicep>
+```powershell
+$resourceGroupName = 'rg-az104-demo-bicep'
+$templateFile = './templates/bicep/main.bicep'
+$parameterFile = './templates/bicep/parameters.bicepparam'
+$deploymentName = "az104-bicep"
 ```
 
-3. Validate deployment:
-
-```bash
-az deployment group validate \
-	--resource-group <resource-group-name> \
-	--template-file <path-to-main.bicep> \
-	--parameters <path-to-main.bicepparam>
+3. Build/compile Bicep to ARM JSON (sanity check):
+```powershell
+az bicep build --file $templateFile
 ```
 
-4. Run what-if:
+4. Validate the template:
 
-```bash
-az deployment group what-if \
-	--resource-group <resource-group-name> \
-	--template-file <path-to-main.bicep> \
-	--parameters <path-to-main.bicepparam>
+```powershell
+az deployment group validate `
+    --name "$deploymentName-validate" `
+    --resource-group $resourceGroupName `
+    --template-file $templateFile `
+    --parameters $parameterFile
+```
+
+5. Run a what-if preview to inspect impact:
+
+```powershell
+az deployment group what-if `
+    --name "$deploymentName-what-if" `
+    --resource-group $resourceGroupName `
+    --template-file $templateFile `
+    --parameters $parameterFile
 ```
 
 ## Lab 4: Deploy resources using ARM or Bicep
@@ -132,69 +158,86 @@ az deployment group what-if \
 Execute deployment to Azure from both template formats.
 
 ### ARM deployment
-
-```bash
-az deployment group create \
-	--resource-group <resource-group-name> \
-	--template-file <path-to-template.json> \
-	--parameters <path-to-parameters.json>
+1. Define variables (file paths and names)
+```powershell
+$resourceGroupName = 'rg-az104-demo-arm'
+$templateFile = './templates/arm/main.json'
+$parameterFile = './templates/arm/parameters.json'
+$deploymentName = "az104-bicep"
+```
+2. Run deployment
+```powershell
+az deployment group create `
+    --name "$deploymentName" `
+    --resource-group $resourceGroupName `
+    --template-file $templateFile `
+    --parameters $parameterFile
 ```
 
 ### Bicep deployment
-
-```bash
-az deployment group create \
-	--resource-group <resource-group-name> \
-	--template-file <path-to-main.bicep> \
-	--parameters <path-to-main.bicepparam>
+1. Define variables (file paths and names)
+```powershell
+$resourceGroupName = 'rg-az104-demo-bicep'
+$templateFile = './templates/bicep/main.bicep'
+$parameterFile = './templates/bicep/parameters.bicepparam'
+$deploymentName = "az104-bicep"
+```
+2. Run deployment
+```powershell
+az deployment group create `
+    --name "$deploymentName" `
+    --resource-group $resourceGroupName `
+    --template-file $templateFile `
+    --parameters $parameterFile
 ```
 
 ### Post-deployment check
 1. Verify resources in Azure Portal.
-2. Review deployment output:
-
-```bash
-az deployment group show \
-	--resource-group <resource-group-name> \
-	--name <deployment-name>
+2. Review deployment output: ARM
+```powershell
+$resourceGroupName = 'rg-az104-demo-arm'
+$deploymentName = "az104-bicep"
+```
+```powershell
+az deployment group show `
+	--resource-group $resourceGroupName `
+	--name $deploymentName
+```
+3. Review deployment output: Bicep
+```powershell
+$resourceGroupName = 'rg-az104-demo-bicep'
+$deploymentName = "az104-bicep"
+```
+```powershell
+az deployment group show `
+	--resource-group $resourceGroupName `
+	--name $deploymentName
 ```
 
-## Lab 5: Export deployment as ARM template or convert ARM to Bicep
 
-### Option A: Export an existing resource group to ARM template
+## Lab 5: Export deployment as ARM template and convert ARM to Bicep
 
-```bash
-az group export --name <resource-group-name> > exported-template.json
+### Task 2: Export an existing resource group to ARM template
+```powershell
+$resourceGroupName = 'rg-az104-demo-arm'
+```
+```powershell
+az group export --name $resourceGroupName > exported-template.json
 ```
 
 Review the exported file and identify reusable parameters/resources.
 
-### Option B: Convert ARM template to Bicep
+### Task 1: Convert ARM template to Bicep
 
-```bash
-az bicep decompile --file <path-to-template.json>
+```powershell
+az bicep decompile --file 'exported-template.json'
 ```
 
 After conversion:
 1. Review generated Bicep for readability and naming.
-2. Build to verify syntax:
+2. Make necesarry changes to the generated bicep file.
+3. Build to verify syntax:
 
-```bash
-az bicep build --file <generated-file.bicep>
+```powershell
+az bicep build --file 'exported-template.bicep'
 ```
-
-## Where to add your course assets
-
-When you provide files later, place them in this repository and update the placeholders:
-
-- ARM templates: `templates/arm/`
-- Bicep files: `templates/bicep/`
-- Deployment command references: `commands/deployment-commands.md`
-
-## Completion checklist
-
-- [ ] Interpreted one ARM template and one Bicep file
-- [ ] Modified and validated an ARM template
-- [ ] Modified and validated a Bicep file
-- [ ] Deployed resources from ARM and/or Bicep
-- [ ] Exported a deployment to ARM or converted ARM to Bicep

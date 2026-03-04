@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "norwayeast"
+        },
+        "vmName": {
+            "value": "az104-vm01"
+        },
+        "adminUsername": {
+            "value": "azureuser"
+        },
+        "sku": {
+            "value": "StandardSSD_LRS"
+        },
+        "vmSize": {
+            "value": "Standard_B2als_v2"
+        },
+        "vnetAddressPrefix": {
+            "value": "10.1.0.0/16"
+        },
+        "subnetAddressPrefix": {
+            "value": "10.1.1.0/24"
+        },
+        "vnetName": {
+            "value": "az104-vnet01"
+        },
+        "subnetName": {
+            "value": "default"
+        }
+    }
+}

@@ -1,0 +1,186 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "networkInterfaces_az104_vm01_nic_name": {
+      "type": "String"
+    },
+    "publicIPAddresses_az104_vm01_pip_name": {
+      "type": "String"
+    },
+    "virtualMachines_az104_vm01_name": {
+      "type": "String"
+    },
+    "virtualNetworks_az104_vnet01_name": {
+      "type": "String"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2024-07-01",
+      "location": "norwayeast",
+      "name": "[parameters('publicIPAddresses_az104_vm01_pip_name')]",
+      "properties": {
+        "ddosSettings": {
+          "protectionMode": "VirtualNetworkInherited"
+        },
+        "idleTimeoutInMinutes": 4,
+        "ipAddress": "20.251.9.73",
+        "ipTags": [],
+        "publicIPAddressVersion": "IPv4",
+        "publicIPAllocationMethod": "Static"
+      },
+      "sku": {
+        "name": "Standard",
+        "tier": "Regional"
+      },
+      "type": "Microsoft.Network/publicIPAddresses"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "location": "norwayeast",
+      "name": "[parameters('virtualNetworks_az104_vnet01_name')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.0.0.0/16"
+          ]
+        },
+        "enableDdosProtection": false,
+        "privateEndpointVNetPolicies": "Disabled",
+        "subnets": [
+          {
+            "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_az104_vnet01_name'), 'default')]",
+            "name": "default",
+            "properties": {
+              "addressPrefix": "10.0.1.0/24",
+              "delegations": [],
+              "privateEndpointNetworkPolicies": "Disabled",
+              "privateLinkServiceNetworkPolicies": "Enabled"
+            },
+            "type": "Microsoft.Network/virtualNetworks/subnets"
+          }
+        ],
+        "virtualNetworkPeerings": []
+      },
+      "type": "Microsoft.Network/virtualNetworks"
+    },
+    {
+      "apiVersion": "2024-11-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_az104_vm01_nic_name'))]"
+      ],
+      "location": "norwayeast",
+      "name": "[parameters('virtualMachines_az104_vm01_name')]",
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "Standard_B2als_v2"
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_az104_vm01_nic_name'))]",
+              "properties": {
+                "primary": true
+              }
+            }
+          ]
+        },
+        "osProfile": {
+          "adminUsername": "azureuser",
+          "allowExtensionOperations": true,
+          "computerName": "[parameters('virtualMachines_az104_vm01_name')]",
+          "linuxConfiguration": {
+            "disablePasswordAuthentication": false,
+            "patchSettings": {
+              "assessmentMode": "ImageDefault",
+              "patchMode": "ImageDefault"
+            },
+            "provisionVMAgent": true
+          },
+          "requireGuestProvisionSignal": true,
+          "secrets": []
+        },
+        "storageProfile": {
+          "dataDisks": [],
+          "diskControllerType": "SCSI",
+          "imageReference": {
+            "offer": "0001-com-ubuntu-server-jammy",
+            "publisher": "Canonical",
+            "sku": "22_04-lts-gen2",
+            "version": "latest"
+          },
+          "osDisk": {
+            "caching": "ReadWrite",
+            "createOption": "FromImage",
+            "deleteOption": "Detach",
+            "diskSizeGB": 30,
+            "managedDisk": {
+              "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_az104_vm01_name'), '_OsDisk_1_8cba9f2898ac40cbb258add290a37503'))]",
+              "storageAccountType": "StandardSSD_LRS"
+            },
+            "name": "[concat(parameters('virtualMachines_az104_vm01_name'), '_OsDisk_1_8cba9f2898ac40cbb258add290a37503')]",
+            "osType": "Linux"
+          }
+        }
+      },
+      "type": "Microsoft.Compute/virtualMachines"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_az104_vnet01_name'))]"
+      ],
+      "name": "[concat(parameters('virtualNetworks_az104_vnet01_name'), '/default')]",
+      "properties": {
+        "addressPrefix": "10.0.1.0/24",
+        "delegations": [],
+        "privateEndpointNetworkPolicies": "Disabled",
+        "privateLinkServiceNetworkPolicies": "Enabled"
+      },
+      "type": "Microsoft.Network/virtualNetworks/subnets"
+    },
+    {
+      "apiVersion": "2024-07-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_az104_vm01_pip_name'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_az104_vnet01_name'), 'default')]"
+      ],
+      "kind": "Regular",
+      "location": "norwayeast",
+      "name": "[parameters('networkInterfaces_az104_vm01_nic_name')]",
+      "properties": {
+        "auxiliaryMode": "None",
+        "auxiliarySku": "None",
+        "disableTcpStateTracking": false,
+        "dnsSettings": {
+          "dnsServers": []
+        },
+        "enableAcceleratedNetworking": false,
+        "enableIPForwarding": false,
+        "ipConfigurations": [
+          {
+            "id": "[concat(resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_az104_vm01_nic_name')), '/ipConfigurations/ipconfig1')]",
+            "name": "ipconfig1",
+            "properties": {
+              "primary": true,
+              "privateIPAddress": "10.0.1.4",
+              "privateIPAddressVersion": "IPv4",
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_az104_vm01_pip_name'))]"
+              },
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_az104_vnet01_name'), 'default')]"
+              }
+            },
+            "type": "Microsoft.Network/networkInterfaces/ipConfigurations"
+          }
+        ],
+        "nicType": "Standard"
+      },
+      "type": "Microsoft.Network/networkInterfaces"
+    }
+  ],
+  "variables": {}
+}

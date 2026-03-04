@@ -15,11 +15,11 @@ param subnetName string
 @description('Address prefix for the subnet')
 param subnetAddressPrefix string
 
-@description('Allowed source IP or CIDR for inbound RDP (port 3389)')
-param rdpAllowedSourceIp string
+@description('Allowed source IP or CIDR for inbound SSH (port 22)')
+param sshAllowedSourceIp string
 
 var nsgName = '${vnetName}-nsg'
-var rdpSourcePrefix = contains(rdpAllowedSourceIp, '/') ? rdpAllowedSourceIp : '${rdpAllowedSourceIp}/32'
+var sshSourcePrefix = contains(sshAllowedSourceIp, '/') ? sshAllowedSourceIp : '${sshAllowedSourceIp}/32'
 
 resource nsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = {
   name: nsgName
@@ -27,12 +27,12 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = {
   properties: {
     securityRules: [
       {
-        name: 'Allow-RDP-From-Input-IP'
+        name: 'Allow-SSH-From-Input-IP'
         properties: {
           protocol: 'Tcp'
           sourcePortRange: '*'
-          destinationPortRange: '3389'
-          sourceAddressPrefix: rdpSourcePrefix
+          destinationPortRange: '22'
+          sourceAddressPrefix: sshSourcePrefix
           destinationAddressPrefix: '*'
           access: 'Allow'
           priority: 1000

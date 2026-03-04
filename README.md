@@ -41,11 +41,11 @@ az bicep version
 		parameters.bicepparam
 ```
 
-## Create .env file based on example below
-```text
-# VM Admin password
-ADMIN_PASSWORD=YOUR-PASSWORD-HERE
+## Set environment variable ADMIN_PASSWORD
+```powershell
+$env:ADMIN_PASSWORD = 'YourStrongPassword!'
 ```
+If you are not using PowerShell, set the environment variable acording to your shell.
 
 ## Lab 1: Interpret an ARM template or Bicep file
 
@@ -85,7 +85,7 @@ Make a controlled change to an existing ARM template.
 $resourceGroupName = 'rg-az104-demo-arm'
 $templateFile = './templates/arm/main.json'
 $parameterFile = './templates/arm/parameters.json'
-$deploymentName = "az104-bicep"
+$deploymentName = "az104-arm"
 ```
 
 4. Validate the template:
@@ -172,7 +172,7 @@ Execute deployment to Azure from both template formats.
 $resourceGroupName = 'rg-az104-demo-arm'
 $templateFile = './templates/arm/main.json'
 $parameterFile = './templates/arm/parameters.json'
-$deploymentName = "az104-bicep"
+$deploymentName = "az104-arm"
 ```
 2. Run deployment
 ```powershell
@@ -205,7 +205,7 @@ az deployment group create `
 2. Review deployment output: ARM
 ```powershell
 $resourceGroupName = 'rg-az104-demo-arm'
-$deploymentName = "az104-bicep"
+$deploymentName = "az104-arm"
 ```
 ```powershell
 az deployment group show `

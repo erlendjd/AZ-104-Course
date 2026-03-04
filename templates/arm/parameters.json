@@ -6,7 +6,7 @@
             "value": "norwayeast"
         },
         "vmName": {
-            "value": "az104-vm01"
+            "value": "az104-vm02"
         },
         "adminUsername": {
             "value": "azureuser"
@@ -24,7 +24,7 @@
             "value": "10.1.1.0/24"
         },
         "vnetName": {
-            "value": "az104-vnet01"
+            "value": "az104-vnet02"
         },
         "subnetName": {
             "value": "default"

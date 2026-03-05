@@ -3,6 +3,8 @@ targetScope = 'resourceGroup'
 @description('Location for VM resources')
 param location string
 
+param tags object = {}
+
 @description('Virtual machine name')
 param vmName string
 
@@ -27,12 +29,16 @@ param vmSize string
 @description('Target subnet resource ID for the network interface')
 param subnetId string
 
+@secure()
+param availabilitySetId string
+
 var publicIpName = '${vmName}-pip'
 var nicName = '${vmName}-nic'
 
 resource publicIp 'Microsoft.Network/publicIPAddresses@2024-05-01' = {
   name: publicIpName
   location: location
+  tags: tags
   sku: {
     name: 'Standard'
   }
@@ -44,6 +50,7 @@ resource publicIp 'Microsoft.Network/publicIPAddresses@2024-05-01' = {
 resource nic 'Microsoft.Network/networkInterfaces@2024-05-01' = {
   name: nicName
   location: location
+  tags: tags
   properties: {
     ipConfigurations: [
       {
@@ -65,6 +72,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2024-05-01' = {
 resource vm 'Microsoft.Compute/virtualMachines@2024-07-01' = {
   name: vmName
   location: location
+  tags: tags
   properties: {
     hardwareProfile: {
       vmSize: vmSize
@@ -100,6 +108,9 @@ resource vm 'Microsoft.Compute/virtualMachines@2024-07-01' = {
           }
         }
       ]
+    }
+    availabilitySet: {
+      id: availabilitySetId
     }
   }
 }

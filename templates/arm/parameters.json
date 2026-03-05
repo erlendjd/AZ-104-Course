@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "location": {
-            "value": "norwayeast"
+            "value": "westeurope"
         },
         "vmName": {
             "value": "az104-vm02"

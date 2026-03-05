@@ -1,7 +1,8 @@
 using './main.bicep'
 
 param location = 'norwayeast'
-param vmName = 'az104-vm01'
+param vmCount = 3
+param vmName = 'az104-vm'
 param adminUsername = 'azureuser'
 param adminPassword = readEnvironmentVariable('ADMIN_PASSWORD', 'ChangeM3-Now!')
 param sku = 'StandardSSD_LRS'
@@ -11,3 +12,7 @@ param subnetAddressPrefix = '10.0.1.0/24'
 param vnetName = 'az104-vnet01'
 param subnetName = 'default'
 param sshAllowedSourceIp = '104.30.177.238/32'
+param tags = {
+  createdby: 'ejd'
+  project: 'az104'
+}

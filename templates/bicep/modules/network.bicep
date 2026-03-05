@@ -3,6 +3,8 @@ targetScope = 'resourceGroup'
 @description('Location for network resources')
 param location string
 
+param tags object = {}
+
 @description('Virtual network name')
 param vnetName string
 
@@ -24,6 +26,7 @@ var sshSourcePrefix = contains(sshAllowedSourceIp, '/') ? sshAllowedSourceIp : '
 resource nsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = {
   name: nsgName
   location: location
+  tags: tags
   properties: {
     securityRules: [
       {
@@ -46,6 +49,7 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = {
 resource vnet 'Microsoft.Network/virtualNetworks@2024-05-01' = {
   name: vnetName
   location: location
+  tags: tags
   properties: {
     addressSpace: {
       addressPrefixes: [

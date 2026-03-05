@@ -3,6 +3,11 @@ targetScope = 'resourceGroup'
 @description('Location for all resources')
 param location string = resourceGroup().location
 
+param tags object = {}
+
+@description('Number of virtual machines to create')
+param vmCount int
+
 @description('Virtual machine name')
 param vmName string = 'az104-vm01'
 
@@ -47,20 +52,33 @@ module networkModule './modules/network.bicep' = {
     subnetName: subnetName
     subnetAddressPrefix: subnetAddressPrefix
     sshAllowedSourceIp: sshAllowedSourceIp
+    tags: tags
   }
 }
 
-module vmModule './modules/vm.bicep' = {
+module availabilitySetModule './modules/availabilitySet.bicep' = {
   params: {
     location: location
-    vmName: vmName
-    adminUsername: adminUsername
-    adminPassword: adminPassword
-    sku: sku
-    vmSize: vmSize
-    subnetId: networkModule.outputs.subnetId
+    availabilitySetName: '${vmName}-avset'
+    tags: tags
   }
 }
 
-output virtualMachineId string = vmModule.outputs.virtualMachineId
+module vmModule './modules/vm.bicep' = [
+  for i in range(0, vmCount): {
+    name: 'vmModule${i}'
+    params: {
+      location: location
+      vmName: '${vmName}-0${i}'
+      adminUsername: adminUsername
+      adminPassword: adminPassword
+      sku: sku
+      vmSize: vmSize
+      subnetId: networkModule.outputs.subnetId
+      availabilitySetId: availabilitySetModule.outputs.availabilitySetId
+      tags: tags
+    }
+  }
+]
+
 output virtualNetworkId string = networkModule.outputs.virtualNetworkId

@@ -1,8 +1,8 @@
-# 🧪 AZ-104 Case Study: "Nordic Outdoor Gear AS"
+# 🧪 AZ-104 Case Study: "Boller og Brus AS"
 
 ## 📖 Scenario Overview
 
-You are a consultant at a Norwegian IT services company. Your client, Nordic Outdoor Gear AS, is a small but growing e-commerce business based in Norway.
+You are a consultant at a Norwegian IT services company. Your client, Boller og Brus AS, is a small but growing e-commerce business based in Norway.
 
 They currently run:
 - A small on-premises file server
@@ -82,8 +82,8 @@ Create the foundational Azure structure.
 
 - Create:
 	- Resource Group structure:
-		- `rg-nordic-prod`
-		- `rg-nordic-dev`
+		- `rg-borus-prod`
+		- `rg-borus-dev`
 - Apply:
 	- Tags:
 		- `Environment`
@@ -98,7 +98,7 @@ Create the foundational Azure structure.
 #### Guidance
 
 - Start by creating the two resource groups first, because almost every later resource depends on a clear placement strategy
-- Put production-style resources in `rg-nordic-prod` and test or lower-risk resources in `rg-nordic-dev`
+- Put production-style resources in `rg-borus-prod` and test or lower-risk resources in `rg-borus-dev`
 - Apply tags as early as possible so students can use them consistently on later resources
 - Use a lock such as `CanNotDelete` on production resources to demonstrate protection against accidental removal
 
@@ -124,7 +124,7 @@ Design secure networking.
 #### Requirements
 
 - Create VNet:
-	- `vnet-nordic`
+	- `vnet-borus`
 - Subnets:
 	- `subnet-vm`
 	- `subnet-app`
@@ -220,7 +220,7 @@ Replace the on-prem file server and enable object storage.
 
 - Create a Storage Account
 - Create:
-	- Azure File Share (`files-nordic`)
+	- Azure File Share (`files-bollerogbrus`)
 - Configure:
 	- Access using storage account access key
 - Create a Blob container:
@@ -236,7 +236,7 @@ Replace the on-prem file server and enable object storage.
 #### What to explain or verify
 
 - Explain the difference between Azure Files and Blob storage
-- Verify that both `files-nordic` and `product-images` exist in the same storage account
+- Verify that both `files-bollerogbrus` and `product-images` exist in the same storage account
 - Explain why SAS is appropriate for temporary upload access to the marketing team
 
 #### Scenario Twist
@@ -257,7 +257,7 @@ Connect the VM to Azure Files.
 
 #### Requirements
 
-- Mount/connect `files-nordic` from the VM
+- Mount/connect `files-bollerogbrus` from the VM
 - Verify read/write access using storage account key authentication
 
 #### Guidance
@@ -284,8 +284,8 @@ Set up identity for employees.
 #### Requirements
 
 - Create users:
-	- `admin@nordicoutdoor.no`
-	- `dev@nordicoutdoor.no`
+	- `admin@bollerogbrus.no`
+	- `dev@bollerogbrus.no`
 - Create groups:
 	- `IT-Admins`
 	- `Developers`
@@ -391,7 +391,7 @@ Ensure business continuity.
 	- Recovery Services Vault
 - Configure:
 	- Backup for VM
-	- Backup for Azure File Share (`files-nordic`)
+	- Backup for Azure File Share (`files-bollerogbrus`)
 - Define:
 	- Backup policy (daily)
 
@@ -404,7 +404,7 @@ Ensure business continuity.
 #### What to explain or verify
 
 - Explain the difference between protecting a VM and protecting a file share
-- Verify that both the VM and `files-nordic` are registered for backup
+- Verify that both the VM and `files-bollerogbrus` are registered for backup
 - Explain what recovery option would be used for accidental file deletion versus full VM failure
 
 #### Scenario Twist

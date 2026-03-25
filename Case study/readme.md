@@ -1,8 +1,8 @@
-# 🧪 AZ-104 Case Study: "Boller og Brus AS"
+# 🧪 AZ-104 Case Study: "Boller og Brus"
 
 ## 📖 Scenario Overview
 
-You are a consultant at a Norwegian IT services company. Your client, Boller og Brus AS, is a small but growing e-commerce business based in Norway.
+You are a consultant at a Norwegian IT services company. Your client, Boller og Brus, is a small but growing e-commerce business based in Norway.
 
 They currently run:
 - A small on-premises file server

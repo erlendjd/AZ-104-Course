@@ -12,7 +12,7 @@ This repository contains course materials and hands-on labs for the **AZ-104 Mic
 │   │   └── bicep/          # Bicep main file, parameter file, and modules
 │   └── README.md           # Lab instructions for ARM and Bicep
 │
-└── Case study/             # End-to-end scenario: Boller og Brus AS
+└── Case study/             # End-to-end scenario: Boller og Brus
     └── readme.md           # Full case study description and phased tasks
 ```
 
@@ -30,7 +30,7 @@ Hands-on labs covering Azure infrastructure deployment using ARM templates and B
 
 See [ARM and Bicep/README.md](ARM%20and%20Bicep/README.md) for full lab instructions.
 
-### Case Study: Boller og Brus AS
+### Case Study: Boller og Brus
 
 An end-to-end scenario where students design and implement a secure Azure environment for a fictional Norwegian e-commerce company migrating to the cloud.
 
